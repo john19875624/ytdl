@@ -74,18 +74,19 @@ def build_ydl_opts(args: argparse.Namespace) -> dict:
         outtmpl = str(output_dir / "%(playlist_index)02d - %(title)s.%(ext)s")
 
     opts: dict = {
-        "outtmpl"          : outtmpl,
-        "progress_hooks"   : [ProgressHook()],
-        "ignoreerrors"     : args.ignore_errors,
-        "noplaylist"       : not args.playlist,
-        "writesubtitles"   : args.subs,
-        "writeautomaticsub": args.subs,
-        "subtitleslangs"   : ["ja", "en"] if args.subs else [],
-        "embedsubtitles"   : args.subs,
-        "embedthumbnail"   : args.thumbnail,
-        "addmetadata"      : True,
-        "quiet"            : False,
-        "no_warnings"      : False,
+        "outtmpl"             : outtmpl,
+        "progress_hooks"      : [ProgressHook()],
+        "ignoreerrors"        : args.ignore_errors,
+        "noplaylist"          : not args.playlist,
+        "writesubtitles"      : args.subs,
+        "writeautomaticsub"   : args.subs,
+        "subtitleslangs"      : ["ja", "en"] if args.subs else [],
+        "embedsubtitles"      : args.subs,
+        "embedthumbnail"      : args.thumbnail,
+        "addmetadata"         : True,
+        "quiet"               : False,
+        "no_warnings"         : False,
+        "nocheckcertificate"  : args.no_check_certificate,
     }
 
     # ── 音声のみ ──
@@ -150,8 +151,8 @@ def _parse_rate(rate_str: str) -> int:
 # ─────────────────────────────────────────────
 #  情報取得
 # ─────────────────────────────────────────────
-def show_info(url: str):
-    with yt_dlp.YoutubeDL({"quiet": True, "skip_download": True}) as ydl:
+def show_info(url: str, no_check_cert: bool = False):
+    with yt_dlp.YoutubeDL({"quiet": True, "skip_download": True, "nocheckcertificate": no_check_cert}) as ydl:
         info = ydl.extract_info(url, download=False)
 
     print(f"\n{'─'*50}")
@@ -222,6 +223,7 @@ def main():
     opts.add_argument("-s", "--subs",                action="store_true", help="字幕を埋め込む (ja / en)")
     opts.add_argument("-t", "--thumbnail",           action="store_true", help="サムネイルを埋め込む")
     opts.add_argument("--ignore-errors",             action="store_true", help="エラーをスキップして続行")
+    opts.add_argument("--no-check-certificate",      action="store_true", help="SSL証明書の検証をスキップ")
     opts.add_argument("--cookies",                   help="cookies.txt のパス")
     opts.add_argument("--cookies-from-browser",
                       choices=["chrome", "firefox", "edge", "safari"],
@@ -251,7 +253,7 @@ def main():
         print(f"[{i}/{len(urls)}] {url}")
 
         if args.info:
-            show_info(url)
+            show_info(url, no_check_cert=args.no_check_certificate)
             continue
 
         ydl_opts = build_ydl_opts(args)
