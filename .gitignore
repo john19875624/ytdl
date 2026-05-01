@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+
+# 仮想環境
+venv/
+.venv/
+env/
+.env
+
+# ダウンロードファイル
+downloads/
+*.mp4
+*.mkv
+*.webm
+*.mp3
+*.m4a
+*.opus
+*.flac
+*.wav
+
+# URLリスト (プライベートな場合)
+urls_private.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
